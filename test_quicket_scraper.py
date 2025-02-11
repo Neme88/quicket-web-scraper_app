@@ -30,3 +30,11 @@ def test_event_data_structure():
         assert 'Event Date' in event, "Missing 'Event Date' key in event data."
         assert 'Event Time' in event, "Missing 'Event Time' key in event data."
 
+# Test handling of invalid page
+def test_scrape_invalid_page():
+    """
+    Test that scraping an invalid page returns an empty list.
+    """
+    events = scrape_page(9999)  # Assuming this page does not exist
+    assert events == [], "Expected an empty list for non-existent pages."
+
