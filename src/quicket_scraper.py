@@ -45,3 +45,17 @@ def scrape_page(page_number):
     return events
 
 
+
+def save_events_to_csv(events, filename='quicket_events.csv'):
+    """
+    Saves the scraped events to a CSV file.
+
+    Args:
+        events (list): List of event dictionaries to save.
+        filename (str): The name of the output CSV file.
+    """
+    df = pd.DataFrame(events)
+    df.to_csv(filename, index=False)
+    print(f"Data saved to {filename}")
+
+
