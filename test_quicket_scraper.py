@@ -38,3 +38,14 @@ def test_scrape_invalid_page():
     events = scrape_page(9999)  # Assuming this page does not exist
     assert events == [], "Expected an empty list for non-existent pages."
 
+# Test rate limiting functionality
+def test_rate_limit():
+    """
+    Test that rate limiting introduces a delay between requests.
+    """
+    start_time = time.time()
+    rate_limit(1, 2)
+    end_time = time.time()
+    elapsed_time = end_time - start_time
+    assert 1 <= elapsed_time <= 2.5, "Rate limiting did not introduce the correct delay."
+
