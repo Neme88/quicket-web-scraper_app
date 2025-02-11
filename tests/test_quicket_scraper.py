@@ -2,23 +2,15 @@ import pytest
 from src.quicket_scraper import scrape_page 
 
 # Test successful page fetch
-
 def test_scrape_page_success():
     """
     Test that scraping def test_scrape_page_success():
-
-    Test that scraping the first page returns a list of events.
-    
-    events = scrape_page(1)
-    assert isinstance(events, list), "Expected result to be a list."
-    assert len(events) > 0, "Expected at least one event on the first page."
-    the first page returns a list of events.
     """
     events = scrape_page(1)
     assert isinstance(events, list), "Expected result to be a list."
     assert len(events) > 0, "Expected at least one event on the first page."
     
-    # Test data structure of scraped events
+# Test data structure of scraped events
 def test_event_data_structure():
     """
     Test that each event contains the expected keys.
