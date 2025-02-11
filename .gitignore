@@ -135,7 +135,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
-
+quicket_web_scraper_env 
 # Spyder project settings
 .spyderproject
 .spyproject
