@@ -22,13 +22,13 @@ This Python script scrapes event data from the [Quicket Events](https://www.quic
     ```bash
     python or python3 -m venv venv
     
-    Activating the virtual environment
+    Activating the virtual environment: 
     For macOS/Linux users:
     source venv/bin/activate 
-
+    
     Activating the virtual environment
     For Windows: 
-    venv\Scripts\activate
+    .\venv\Scripts\activate
     ```
 
 3. **Install Dependencies:**
