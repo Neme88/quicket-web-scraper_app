@@ -16,3 +16,17 @@ def test_scrape_page_success():
     events = scrape_page(1)
     assert isinstance(events, list), "Expected result to be a list."
     assert len(events) > 0, "Expected at least one event on the first page."
+    
+    # Test data structure of scraped events
+def test_event_data_structure():
+    """
+    Test that each event contains the expected keys.
+    """
+    events = scrape_page(1)
+    if events:  # Only test structure if events exist
+        event = events[0]
+        assert 'Event Title' in event, "Missing 'Event Title' key in event data."
+        assert 'Event Location' in event, "Missing 'Event Location' key in event data."
+        assert 'Event Date' in event, "Missing 'Event Date' key in event data."
+        assert 'Event Time' in event, "Missing 'Event Time' key in event data."
+
