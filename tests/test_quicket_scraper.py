@@ -1,5 +1,6 @@
 import pytest
 from src.quicket_scraper import scrape_page 
+import time 
 
 # Test successful page fetch
 def test_scrape_page_success():

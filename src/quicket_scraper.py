@@ -1,50 +1,105 @@
-### quicket_scraper.py
-
-import requests
+from requests.exceptions import RequestException, HTTPError
+from requests_html import HTMLSession
 from bs4 import BeautifulSoup
 import pandas as pd
+import json
 import time
 import random
+from datetime import datetime
 
 BASE_URL = 'https://www.quicket.co.za/events/?page={}'
 
 def scrape_page(page_number):
-    """
-    Scrapes event data from a specific page number on Quicket.
-
-    Args:
-        page_number (int): The page number to scrape.
-
-    Returns:
-        list: A list of dictionaries containing event details.
-    """
+    session = HTMLSession()
     url = BASE_URL.format(page_number)
+    
+    
     try:
-        response = requests.get(url, timeout=10)
-        response.raise_for_status()
-    except requests.exceptions.RequestException as e:
-        print(f"Error fetching page {page_number}: {e}")
+        response = session.get(url)
+        response.raise_for_status()  # Raise HTTPError for bad status codes
+        response.html.render(timeout=30, sleep=5)
+    except HTTPError as http_err:
+        print(f"HTTP error occurred while fetching page {page_number}: {http_err}")
         return []
+    except RequestException as req_err:
+        print(f"Request error occurred while fetching page {page_number}: {req_err}")
+        return []
+    except Exception as e:
+        print(f"Unexpected error occurred on page {page_number}: {e}")
+        return []
+    
+    
+    soup = BeautifulSoup(response.html.html, 'html.parser')
+    json_scripts = soup.find_all('script', type='application/ld+json')
 
-    soup = BeautifulSoup(response.content, 'html.parser')
     events = []
+    for script in json_scripts:
+        try:
+            data = json.loads(script.string)
+            if isinstance(data, list):
+                for event in data:
+                    if event.get('@type') == 'Event':
+                        events.append(parse_event(event))
+            elif data.get('@type') == 'Event':
+                events.append(parse_event(data))
+        except (json.JSONDecodeError, TypeError):
+            continue
 
-    for event in soup.find_all('div', class_='event-card'):
-        title = event.find('h3').get_text(strip=True) if event.find('h3') else 'N/A'
-        location = event.find('div', class_='location').get_text(strip=True) if event.find('div', class_='location') else 'N/A'
-        date = event.find('div', class_='date').get_text(strip=True) if event.find('div', class_='date') else 'N/A'
-        time_ = event.find('div', class_='time').get_text(strip=True) if event.find('div', class_='time') else 'N/A'
-
-        events.append({
-            'Event Title': title,
-            'Event Location': location,
-            'Event Date': date,
-            'Event Time': time_
-        })
-
+    print(f"Found {len(events)} events on page {page_number}")
     return events
 
+def parse_event(event_data):
+    """Extract event details from the JSON data and split date/time."""
+    
+    title = event_data.get('name', 'N/A')
+    location = event_data.get('location', {}).get('name', 'N/A')
+    address = event_data.get('location', {}).get('address', {}).get('streetAddress', 'N/A')
+    url = event_data.get('url', 'N/A')
+    
+    # Extract start and end date-time strings
+    start_datetime_str = event_data.get('startDate', 'N/A')
+    end_datetime_str = event_data.get('endDate', 'N/A')
+    
+    # Convert ISO format to datetime objects for splitting
+    start_date, start_time = split_datetime(start_datetime_str)
+    end_date, end_time = split_datetime(end_datetime_str)
 
+    return {
+        'Event Title': title,
+        'Event Location': f"{location}, {address}",
+        'Start Date': start_date,
+        'Start Time': start_time,
+        'End Date': end_date,
+        'End Time': end_time,
+        'Event URL': url
+    }
+    
+    
+def split_datetime(datetime_str):
+    """Split an ISO 8601 datetime string into separate date and time components."""
+    if datetime_str == 'N/A':
+        return 'N/A', 'N/A'
+    
+    try:
+        dt = datetime.fromisoformat(datetime_str.replace('Z', '+00:00'))
+        date = dt.date().isoformat()
+        time = dt.time().strftime('%H:%M:%S')
+        return date, time
+    except ValueError:
+        return 'Invalid Date', 'Invalid Time'
+
+def split_datetime(datetime_str):
+    """Split an ISO 8601 datetime string into separate date and time components."""
+    if datetime_str == 'N/A':
+        return 'N/A', 'N/A'
+    
+    try:
+        dt = datetime.fromisoformat(datetime_str.replace('Z', '+00:00'))
+        date = dt.date().isoformat()
+        time = dt.time().strftime('%H:%M:%S')
+        return date, time
+    except ValueError:
+        return 'Invalid Date', 'Invalid Time'
 
 def save_events_to_csv(events, filename='quicket_events.csv'):
     """
@@ -58,6 +113,7 @@ def save_events_to_csv(events, filename='quicket_events.csv'):
     df.to_csv(filename, index=False)
     print(f"Data saved to {filename}")
     
+ # Test rate limiting functionality 
 def rate_limit(min_delay=1, max_delay=3):
     """
     Introduces a random delay between requests to prevent server overload.
