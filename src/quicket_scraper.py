@@ -57,5 +57,17 @@ def save_events_to_csv(events, filename='quicket_events.csv'):
     df = pd.DataFrame(events)
     df.to_csv(filename, index=False)
     print(f"Data saved to {filename}")
+    
+def rate_limit(min_delay=1, max_delay=3):
+    """
+    Introduces a random delay between requests to prevent server overload.
+
+    Args:
+        min_delay (int): Minimum delay in seconds.
+        max_delay (int): Maximum delay in seconds.
+    """
+    delay = random.uniform(min_delay, max_delay)
+    time.sleep(delay)
+    print(f"Rate limiting applied: sleeping for {delay:.2f} seconds")
 
 
