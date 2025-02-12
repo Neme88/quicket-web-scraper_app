@@ -52,6 +52,7 @@ PYTHONPATH=./src pytest tests/
 ### For Linux/Mac Users:
 set PYTHONPATH=./src && pytest tests/
 ```
+```bash
 **Note:**
 The `PYTHONPATH=./src` ensures that Python recognizes the modules inside the `src` directory. Without this, the tests may fail due to import errors.
 ```
