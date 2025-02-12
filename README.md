@@ -40,7 +40,7 @@ This Python script scrapes event data from the [Quicket Events](https://www.quic
 
 To run the web scraper, use:
 ```bash
-python src/run_scripts.py
+python src/run_scraper.py
 ```
 ## Running the Tests Script
 
