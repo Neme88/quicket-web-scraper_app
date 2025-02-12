@@ -49,7 +49,7 @@ python src/run_scripts.py
 PYTHONPATH=./src pytest tests/
 ```
 
-### For Linux/Mac Users:
+### For Windows Users:
 set PYTHONPATH=./src && pytest tests/
 ```
 Note:
