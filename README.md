@@ -41,19 +41,23 @@ This Python script scrapes event data from the [Quicket Events](https://www.quic
 To run the web scraper, use:
 ```bash
 python src/run_scripts.py
-
+```
 ## Running the Tests Script
 
 ### For Linux/Mac Users:
 ```bash
 PYTHONPATH=./src pytest tests/
+```
 
 ### For Linux/Mac Users:
 set PYTHONPATH=./src && pytest tests/
-
-Note:
-The PYTHONPATH=./src ensures that Python recognizes the modules inside the src directory. Without this, the tests may fail due to import errors.
-
+```
+**Note:**
+The `PYTHONPATH=./src` ensures that Python recognizes the modules inside the `src` directory. Without this, the tests may fail due to import errors.
+```
+### Test Output
+If everything is set correctly, you'll see:
+```bash
 ============================= test session starts =============================
 platform linux -- Python 3.10.x, pytest-8.x.x
 collected 8 items
@@ -61,3 +65,4 @@ collected 8 items
 tests/test_quicket_scraper.py ........                                      [100%]
 
 ============================== 8 passed in 1.20s =============================
+```
