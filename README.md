@@ -36,7 +36,17 @@ This Python script scrapes event data from the [Quicket Events](https://www.quic
     ```bash
     pip install -r requirements.txt
     ```
-
+**Create a .env file and copy BASE_URL in the .env.example file in the root directory**
+## For linux/Mac users:
+```bash
+cp .env.example .env
+```
+## For windows users:
+```bash
+copy .env.example .env          # command prompt users
+    or
+Copy-Item .env.example .env     # PowerShell users. 
+```
 ## Running the Script
 
 To run the web scraper, use:
